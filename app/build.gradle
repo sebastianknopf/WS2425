@@ -43,6 +43,16 @@ android {
         }
     }
 
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.all { output ->
+                def versionName = variant.versionName
+                def baseName = "app-${variant.name}-${versionName}.apk"
+                outputFileName = baseName
+            }
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
