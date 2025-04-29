@@ -18,13 +18,16 @@ jobs:
       - name: Decode keystore from secret
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+          echo "Keystore file exists?"
 
       - name: Set up gradle.properties
         run: |
-          echo "RELEASE_STORE_FILE=keystore.jks" >> local.properties
+          echo "RELEASE_STORE_FILE=${{ github.workspace }}/keystore.jks" >> local.properties
           echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
           echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
           echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
+          
+          ls -l $RELEASE_STORE_FILE
 
       - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
