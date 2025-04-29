@@ -7,6 +7,8 @@ on:
 jobs:
   build-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Important: Allow to modify the repository
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
