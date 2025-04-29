@@ -10,33 +10,26 @@ jobs:
     permissions:
       contents: write  # Important: Allow to modify the repository
     steps:
-      - name: Checkout code
+      - name: checkout-repository
         uses: actions/checkout@v4
-      - name: Set up JDK
+      - name: setup-jdk
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Decode keystore from secret
+      - name: setup-keystore
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
-          echo "Keystore file exists?"
-
-      - name: Set up gradle.properties
+      - name: setup-gradle.properties
         run: |
           echo "RELEASE_STORE_FILE=${{ github.workspace }}/keystore.jks" >> local.properties
           echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
           echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
           echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
-          
-          ls -l $RELEASE_STORE_FILE
-
-      - name: Make Gradle wrapper executable
+      - name: setup-gradle-wrapper
         run: chmod +x ./gradlew
-
-      - name: Build signed release APK
+      - name: run-gradle-build
         run: ./gradlew assembleRelease
-
       - name: create-gh-release
         run: |
           gh release create ${{ github.ref_name }} --generate-notes app/build/outputs/apk/release/*.apk
