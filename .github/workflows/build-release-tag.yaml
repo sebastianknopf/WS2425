@@ -35,9 +35,8 @@ jobs:
       - name: Build signed release APK
         run: ./gradlew assembleRelease
 
-      - name: Upload APK to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: app/build/outputs/apk/release/*.apk
+      - name: create-gh-release
+        run: |
+          gh release create ${{ github.ref_name }} --generate-notes *.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
