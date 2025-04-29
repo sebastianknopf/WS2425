@@ -1,5 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
+    id 'com.gladed.androidgitversion' version '0.4.14'
+}
+
+androidGitVersion {
+    format '%tag%%.devcount%%+commit%'
 }
 
 android {
@@ -10,8 +15,8 @@ android {
         applicationId "de.hka.ws2425"
         minSdk 24
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode androidGitVersion.code()
+        versionName androidGitVersion.name()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
