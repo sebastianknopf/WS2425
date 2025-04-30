@@ -14,6 +14,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: setup-gradle-wrapper
+        run: chmod +x ./gradlew
       - name: run-gradle-license-report
         run: ./gradlew licenseDebugReport
       - name: run-copy-license-report
