@@ -14,6 +14,15 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      - name: setup-keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore.jks
+      - name: setup-gradle.properties
+        run: |
+          echo "RELEASE_STORE_FILE=${{ github.workspace }}/keystore.jks" >> local.properties
+          echo "RELEASE_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> local.properties
+          echo "RELEASE_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "RELEASE_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> local.properties
       - name: setup-gradle-wrapper
         run: chmod +x ./gradlew
       - name: run-gradle-license-report
