@@ -6,6 +6,8 @@ on:
 jobs:
   license-check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # important: Allow to modify the repository
     steps:
       - name: checkout-repository
         uses: actions/checkout@v3
