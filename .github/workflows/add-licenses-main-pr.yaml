@@ -1,0 +1,29 @@
+name: OSS License Report
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout-repository
+        uses: actions/checkout@v3
+      - name: setup-jdk
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: run-gradle-license-report
+        run: ./gradlew licenseDebugReport
+      - name: run-copy-license-report
+        run: |
+          mkdir -p licenses
+          cp app/build/reports/licenses/licenseDebugReport.txt licenses/licenses.txt
+      - name: run-update-licenses-repository
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add licenses/licenses.txt
+          git diff --cached --quiet || git commit -m "Updated OSS license report"
+          git push origin HEAD:$GITHUB_HEAD_REF
